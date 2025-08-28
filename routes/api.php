@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CertificateController;
+use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\ContactRequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,10 +27,6 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{product}', [ProductController::class, 'show']);
 Route::get('/certificates', [CertificateController::class, 'index']);
 
-// форма заявки
-Route::post('/contact-requests', [ContactRequestController::class, 'store'])
-    ->middleware('throttle:contact');
-
-// алиас под уже существующий фронт (ContactModal отправляет на /api/leads)
-Route::post('/leads', [ContactRequestController::class, 'store'])
-    ->middleware('throttle:contact');
+Route::post('/leads', [LeadController::class, 'store'])
+    ->name('api.leads.store')
+    ->middleware('throttle:api');

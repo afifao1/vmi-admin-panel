@@ -2,41 +2,41 @@
 
 namespace App\Mail;
 
-use App\Models\ContactRequest;
+use App\Models\Lead;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ContactRequestNotification extends Mailable
+class LeadCreatedMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public ContactRequest $contact) {}
-
-    public function build()
+    public function __construct(public Lead $lead)
     {
-        return $this->subject('Новая заявка №' . $this->contact->id)
-            ->markdown('emails.contact_request', [
-                'c' => $this->contact,
-            ]);
+        //
     }
+
+
     public function envelope(): Envelope
     {
+        $subject = $this->lead->type === 'contact'
+            ? 'Связаться с менеджером #' . $this->lead->id
+            : 'Оставить заявку #' . $this->lead->id;
+
         return new Envelope(
-            subject: 'Contact Request Notification',
+            subject: $subject,
+            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME', 'VMI')),
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'emails.lead_created',
+            with: ['lead' => $this->lead],
         );
     }
 
