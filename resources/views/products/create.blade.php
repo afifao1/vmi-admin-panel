@@ -39,13 +39,7 @@
                     </select>
                     @error('type') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
-
-                <div class="form-group">
-                    <label>Power (optional)</label>
-                    <input type="number" name="power" class="form-control" value="{{ old('power') }}">
-                    @error('power') <small class="text-danger">{{ $message }}</small> @enderror
-                </div>
-
+                
                 <div class="form-group">
                     <label>Image (optional)</label>
                     <input type="file" name="img" class="form-control">
